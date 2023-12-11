@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="icon.png">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: linear-gradient(45deg, #08001f, #30197d);
+        }
+
+        .box {
+            background-color: rgba(244, 27, 117, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-container input {
+            font-family: 'Times New Roman', serif;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 5px;
+            font-size: 1.2em;
+            background-color: #fff; 
+            color: #333;
+        }
+
+        .input-container button {
+            font-family: 'Times New Roman', serif; /* Updated font */
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #d73d83;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+
+        .input-container button:hover {
+            background-color: #b02a5a;
+        }
+
+        .timer {
+            font-family: 'Verdana', sans-serif;
+            font-size: 3em;
+            color: #fff;
+            margin: 20px 0;
+        }
+
+        .controls button {
+            font-family: 'Times New Roman', serif; /* Updated font */
+            padding: 10px 20px;
+            margin: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+
+        .controls button:hover {
+            filter: brightness(90%);
+        }
+
+        button.start { background-color: #09096a; color: #fff; }
+        button.pause { background-color: #d73d83; color: #fff; }
+        button.resume { background-color: #d73d83; color: #fff; }
+        button.reset { background-color: #09096a; color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="container">
+            <h1><u>COUNTDOWN TIMER</u></h1>
+            <div class="input-container">
+                <input type="number" id="hours" placeholder="Hours" min="0" max="23">
+                <input type="number" id="minutes" placeholder="Minutes" min="0" max="59">
+                <input type="number" id="seconds" placeholder="Seconds" min="0" max="59">
+                <br>
+                <button onclick="setTimer()">Set Timer</button>
+            </div>
+            <div class="timer">
+                <span id="display">00:00:00</span>
+            </div>
+            <div class="controls">
+                <button class="start" onclick="startTimer()">Start</button>
+                <button class="pause" onclick="pauseTimer()">Pause</button>
+                <button class="resume" onclick="resumeTimer()">Resume</button>
+                <button class="reset" onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let timer;
+        let totalTime = 0;
+        let isPaused = false;
+        function setTimer() {
+            let hours = parseInt(document.getElementById('hours').value) || 0;
+            let minutes = parseInt(document.getElementById('minutes').value) || 0;
+            let seconds = parseInt(document.getElementById('seconds').value) || 0;
+            totalTime = hours * 3600 + minutes * 60 + seconds;
+            document.getElementById('display').innerText = formatTime(totalTime);
+        }
+        function startTimer() {
+            if (!timer && totalTime > 0) {
+                timer = setInterval(updateTimer, 1000);
+            }
+        }
+        function pauseTimer() {
+            clearInterval(timer);
+            isPaused = true;
+        }
+        function resumeTimer() {
+            if (isPaused) {
+                timer = setInterval(updateTimer, 1000);
+                isPaused = false;
+            }
+        }
+        function resetTimer() {
+            clearInterval(timer);
+            isPaused = false;
+            totalTime = 0;
+            document.getElementById('hours').value = '';
+            document.getElementById('minutes').value = '';
+            document.getElementById('seconds').value = '';
+            document.getElementById('display').innerText = '00:00:00';
+        }
+        function updateTimer() {
+            if (totalTime <= 0) {
+                clearInterval(timer);
+                document.getElementById('display').innerText = '00:00:00';
+                return;
+            }
+            totalTime--;
+            document.getElementById('display').innerText = formatTime(totalTime);
+        }
+        function formatTime(time) {
+            let hours = Math.floor(time / 3600);
+            let minutes = Math.floor((time % 3600) / 60);
+            let seconds = time % 60;
+            return padTime(hours) + ':' + padTime(minutes) + ':' + padTime(seconds);
+        }
+        function padTime(time) {
+            return time < 10 ? `0${time}` : time;
+        }
+    </script>
+</body>
+</html>
